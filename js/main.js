@@ -42,13 +42,18 @@ const overLayer = map.createStaticLayer("over", tiles, 0, 0);
   worldLayer.setCollisionByProperty({ collision: true });
 
 
-  chinelo = this.physics.add.sprite(300,300, "chinelo");
+
+
+  pickupGroup = this.physics.add.group()
+
+  var chinelo = pickupGroup.create(200, 100, "chinelo")
   chinelo.body.imovable = true;
   chinelo.body.moves = false;
 
+
   player = this.physics.add.sprite(160, 160, "hero")
   this.physics.add.collider(player, worldLayer);
-  this.physics.add.collider(player, chinelo)
+  this.physics.add.collider(player, pickupGroup)
 
 
 
@@ -57,6 +62,11 @@ const overLayer = map.createStaticLayer("over", tiles, 0, 0);
 camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
  cursors = this.input.keyboard.createCursorKeys();
+}
+
+function pickup(player, object) {
+  console.log("ok");
+  //object.destroy()
 }
 
 function update(time, delta) {
@@ -79,12 +89,16 @@ function update(time, delta) {
     player.body.setVelocityY(speed);
   }
 
-  this.input.keyboard.once("keydown_G", event => {
-
+  this.input.keyboard.once("keydown_P", event => {
+    //colisao e pegar objeto
   });
 
   this.input.keyboard.once("keydown_D", event => {
-
+    if (player.inventory) {
+      chinelo = this.physics.add.sprite(player.getCenter()['x'],player.getCenter()['y'], player.inventory.shift());
+      chinelo.body.imovable = true;
+      chinelo.body.moves = false;
+    }
   });
 
   // Normalize and scale the velocity so that player can't move faster along a diagonal
